@@ -21,7 +21,12 @@ public enum EAudioEventType
 public struct AudioSetting
 {
 	public EAudioEventType type;
-	public AudioClip clip;
+	public AudioClip[] clips;
+
+	public AudioClip getClip()
+	{
+		return clips [UnityEngine.Random.Range (0, clips.Length - 1)];
+	}
 
 	[Range (0f, 1f)]
 	public float volume;

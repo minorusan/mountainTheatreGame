@@ -1,59 +1,59 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.ObjectPooling;
 
 
 public class PlayerAudioBehaviour : MonoBehaviour
 {
 	private float _originalPitch;
-	private AudioSource _source;
+
+	public PlayerAudioPlayerBehaviour prefab;
 	public AudioSettings settings;
 
 	private void Start()
 	{
-		_source = GetComponent <AudioSource> ();
-		_originalPitch = _source.pitch;
-		var position = Camera.main.transform.position;
+		PoolManager.Instance.CreatePool (prefab.gameObject, 20);
+
 		var inputHandler = FindObjectOfType<InputBehaviour> ();
 
 		inputHandler.beganHold += () => {
-			PlaySoundWithSettingsForEvent (EAudioEventType.hold);
+			var settingsForEvent = settings.settingsForEventType (EAudioEventType.hold);
+			PoolManager.Instance.ReuseObject (prefab.gameObject, transform.position, Quaternion.identity, settingsForEvent);
 		};
 
 		inputHandler.jumpedOffSurface += () => {
-			PlaySoundWithSettingsForEvent (EAudioEventType.jumpedOffCliff);
+			var settingsForEvent = settings.settingsForEventType (EAudioEventType.jumpedOffCliff);
+			PoolManager.Instance.ReuseObject (prefab.gameObject, transform.position, Quaternion.identity, settingsForEvent);
 		};
 
 		inputHandler.reachedSurface += () => {
-			PlaySoundWithSettingsForEvent (EAudioEventType.reachedSurface);
+			var settingsForEvent = settings.settingsForEventType (EAudioEventType.reachedSurface);
+			PoolManager.Instance.ReuseObject (prefab.gameObject, transform.position, Quaternion.identity, settingsForEvent);
 		};
 
 		inputHandler.tappedWhileInAir += () => {
 
-			PlaySoundWithSettingsForEvent (EAudioEventType.jumpedinAir);
+			var settingsForEvent = settings.settingsForEventType (EAudioEventType.jumpedinAir);
+			PoolManager.Instance.ReuseObject (prefab.gameObject, transform.position, Quaternion.identity, settingsForEvent);
 		};
 
 		inputHandler.releasedWhileInAir += () => {
 
-			PlaySoundWithSettingsForEvent (EAudioEventType.releaseInTheAir);
+			var settingsForEvent = settings.settingsForEventType (EAudioEventType.releaseInTheAir);
+			PoolManager.Instance.ReuseObject (prefab.gameObject, transform.position, Quaternion.identity, settingsForEvent);
 		};
 	}
 
 	public void PlaySound(EAudioEventType type)
 	{
-		PlaySoundWithSettingsForEvent (type);
+		var settingsForEvent = settings.settingsForEventType (type);
+		PoolManager.Instance.ReuseObject (prefab.gameObject, transform.position, Quaternion.identity, settingsForEvent);
 	}
 
 	void OnPlayerKilled()
 	{
-		PlaySoundWithSettingsForEvent (EAudioEventType.death);
-	}
-
-	private void PlaySoundWithSettingsForEvent(EAudioEventType type)
-	{
-		var settingsForEvent = settings.settingsForEventType (type);
-		_source.pitch = _originalPitch + Random.Range (-settingsForEvent.pitchVariety, settingsForEvent.pitchVariety);
-		_source.volume = settingsForEvent.volume;
-		_source.PlayOneShot (settingsForEvent.clip);
+		var settingsForEvent = settings.settingsForEventType (EAudioEventType.death);
+		PoolManager.Instance.ReuseObject (prefab.gameObject, transform.position, Quaternion.identity, settingsForEvent);
 	}
 }
