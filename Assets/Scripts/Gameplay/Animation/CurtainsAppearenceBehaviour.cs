@@ -14,6 +14,13 @@ public class CurtainsAppearenceBehaviour : MonoBehaviour
 	public float xPositionOffset = 1f;
 	public Ease ease;
 
+	private void Awake()
+	{
+		var viewPortCenter = Camera.main.ViewportToWorldPoint (new Vector3 (0.5f, 0.5f, 0f));
+		viewPortCenter.z = transform.position.z;
+		transform.position = viewPortCenter;
+	}
+
 	public void PerformAnimation()
 	{
 		var upperCurtains = transform.GetChild (0);

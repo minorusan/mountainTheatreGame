@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 public class ScrollableMountainBehaviour : MonoBehaviour
 {
 	private static ScrollableMountainBehaviour _instance;
+	private bool _canContinue;
 
 	public static Transform activeChild
 	{
@@ -38,6 +39,11 @@ public class ScrollableMountainBehaviour : MonoBehaviour
 		}
 	}
 
+	public static void Launch()
+	{
+		_instance._canContinue = true;
+	}
+
 	private void Awake()
 	{
 		_instance = this;
@@ -61,9 +67,12 @@ public class ScrollableMountainBehaviour : MonoBehaviour
 		_lowerBound = transform.position.y - _distance;
 	}
 
-
 	private void Update()
 	{
+		if (_canContinue == false)
+		{
+			return;
+		}
 		_moveSpeed = Mathf.MoveTowards (_moveSpeed, _initialMoveSpeed, _moveSpeedDump * Time.deltaTime);
 
 		for (int i = 0; i < transform.childCount; i++)

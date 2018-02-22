@@ -14,15 +14,27 @@ public class SceneActivationBehaviour : MonoBehaviour
 	public CurtainsAppearenceBehaviour curtains;
 	public float delayForCurtains;
 
+	public Animator playerStartAnimator;
+	public PlayerAppearenceBehaviour playerAppearence;
+	public float delayForPlayerStart;
+
 	// Use this for initialization
 	private void Awake()
 	{
+		playerStartAnimator.enabled = true;
 		curtains.finishedMovement += () => {
 			StartAnimationDelayed (background.PerformAnimation, delayForBackground);
+
 		};
 
 		background.finishedMovement += () => {
-			
+			StartAnimationDelayed (() => {
+					
+				}, delayForPlayerStart);
+		};
+
+		playerAppearence.finishedMovement += () => {
+			ScrollableMountainBehaviour.Launch ();
 		};
 	}
 
