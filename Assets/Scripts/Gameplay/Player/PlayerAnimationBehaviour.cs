@@ -49,7 +49,7 @@ public class PlayerAnimationBehaviour : MonoBehaviour
 
 	public void OnLegSweep()
 	{
-		var obj = Instantiate (particles);
+		var obj = Instantiate (particles, ScrollableMountainBehaviour.activeChild);
 
 		obj.SetActive (true);
 

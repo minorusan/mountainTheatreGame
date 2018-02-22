@@ -11,6 +11,12 @@ public class ScrollableMountainBehaviour : MonoBehaviour
 {
 	private static ScrollableMountainBehaviour _instance;
 
+	public static Transform activeChild
+	{
+		get;
+		private set;
+	}
+
 	private GameSettings settings;
 	private InputBehaviour _input;
 	private Transform[] _children;
@@ -69,6 +75,7 @@ public class ScrollableMountainBehaviour : MonoBehaviour
 			if (condition)
 			{
 				position.y += _distance * 2f;
+				activeChild = _children [i];
 				_currentHeight += settings.mountainPeriod;
 				var prev = PlayerPrefs.GetInt ("max");
 				if (_currentHeight > prev)
